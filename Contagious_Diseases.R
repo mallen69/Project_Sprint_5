@@ -150,6 +150,7 @@ Smallpox_percentage_sick <- filter(Smallpox_Only, !is.na(percentage_sick))
 #Calculate the Smallpox disease per State (by the highest percentage_sick)   
 Smallpox_States_highest <- ddply(Smallpox_Only, 'state', function(x) x[x$percentage_sick==max(x$percentage_sick),])
 
+
 mean(Smallpox_States_highest$percentage_sick)
 
 
