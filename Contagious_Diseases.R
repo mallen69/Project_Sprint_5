@@ -17,6 +17,12 @@ library("plyr")
 #loading library car as it may be used for the Anova Calculation
 libary("car")
 
+#loading library ggpubr as it used for boxplots
+library("ggpubr")
+
+#loading the library multcomp to perform multiple comparison procedures for an ANOVA. glht stands for general linear hypothesis tests. 
+library(multcomp)
+
 #Creating the variable "sick" to represent the ""us_contagious_diseases.csv"" 
 #which was pulled from the Internet
 sick <- read.csv("us_contagious_diseases.csv")
@@ -52,6 +58,8 @@ Sicker <- filter(sick, !is.na(percentage_sick))
 #Calculate the top disease per State (by the highest percentage_sick)                                    
 States_highest_sick <- ddply(Sicker, 'state', function(x) x[x$percentage_sick==max(x$percentage_sick),])
 
+For_Print_out_Highest_States <-States_highest_sick <- ddply(Sicker, 'state', function(x) x[x$percentage_sick==max(x$percentage_sick),])
+
 #Calculate the mean of the top disease per state (by the highest percentage_sick) 
 mean(States_highest_sick$percentage_sick)
 
@@ -71,6 +79,10 @@ Hepatitis_A_States_highest <- ddply(Hepatitis_A_Only, 'state', function(x) x[x$p
 #Calculate the mean of the highest Hepatatis_A disease per state (by the highest percentage_sick) 
 mean(Hepatitis_A_States_highest$percentage_sick)
 
+#Create a varible name "Hep_A_Mean" to be used for output
+Hep_A_Mean <- mean(Hepatitis_A_States_highest$percentage_sick)
+
+
 
 #Create a varibable name of Measles_Only which will be used to View/Calculate further only that disease
 Measles_Only <- subset(Sicker, disease == "Measles")
@@ -80,6 +92,9 @@ Measles_States_highest <- ddply(Measles_Only, 'state', function(x) x[x$percentag
 
 #Calculate the mean of the highest Hepatatis_A disease per state (by the highest percentage_sick) 
 mean(Measles_States_highest$percentage_sick)
+
+#Create a varible name "Measles_Mean" to be used for output
+Measles_Mean <- mean(Measles_States_highest$percentage_sick)
 
 
 
@@ -91,6 +106,9 @@ Mumps_States_highest <- ddply(Mumps_Only, 'state', function(x) x[x$percentage_si
 
 #Calculate the mean of the highest Mumps disease per state (by the highest percentage_sick) 
 mean(Mumps_States_highest$percentage_sick)
+
+#Create a varible name "Mumps_Mean" to be used for output
+Mumps_Mean <- mean(Mumps_States_highest$percentage_sick) 
 
 
 #Create a varibable name of Pertussis_Only which will be used to View/Calculate further only that disease
@@ -109,7 +127,12 @@ Pertussis_percentage_sick <- filter(Pertussis_Only, !is.na(percentage_sick))
 #Calculate the Pertussis disease per State (by the highest percentage_sick)   
 Pertussis_States_highest <- ddply(Pertussis_percentage_sick, 'state', function(x) x[x$percentage_sick==max(x$percentage_sick),])
 
+#Calculate the mean of the highest Pertussis disease per state (by the highest percentage_sick) 
 mean(Pertussis_States_highest$percentage_sick)
+
+#Create a varible name "Pertussis_Mean" to be used for output
+Pertussis_Mean <- mean(Pertussis_States_highest$percentage_sick)
+
 
 #Create a varibable name of Polio_Only which will be used to View/Calculate further only that disease
 Polio_Only <- subset(Sicker, disease == "Polio")
@@ -117,7 +140,11 @@ Polio_Only <- subset(Sicker, disease == "Polio")
 #Calculate the Polio disease per State (by the highest percentage_sick)   
 Polio_States_highest <- ddply(Polio_Only, 'state', function(x) x[x$percentage_sick==max(x$percentage_sick),])
 
+#Calculate the mean of the highest Polio disease per state (by the highest percentage_sick) 
 mean(Polio_States_highest$percentage_sick)
+
+#Create a varible name "Pertussis_Mean" to be used for output
+Polio_Mean <- mean(Polio_States_highest$percentage_sick)
 
 
 #Create a varibable name of Rubella_Only which will be used to View/Calculate further only that disease
@@ -129,6 +156,8 @@ Rubella_States_highest <- ddply(Rubella_Only, 'state', function(x) x[x$percentag
 #Calculate the mean of the highest Rubella disease per state (by the highest percentage_sick) 
 mean(Rubella_States_highest$percentage_sick)
 
+#Create a varible name "Rubella_Mean" to be used for output
+Rubella_Mean <- mean(Rubella_States_highest$percentage_sick)
 
 
 #Create a varibable name of Smallpox_Only which will be used to View/Calculate further only that disease
@@ -147,17 +176,41 @@ Smallpox_population <- filter(Smallpox_Only, !is.na(count))
 Smallpox_percentage_sick <- filter(Smallpox_Only, !is.na(percentage_sick))
 
 
+
+
 #Calculate the Smallpox disease per State (by the highest percentage_sick)   
 Smallpox_States_highest <- ddply(Smallpox_Only, 'state', function(x) x[x$percentage_sick==max(x$percentage_sick),])
 
-
+#Calculate the mean of the highest Smallpox disease per state (by the highest percentage_sick) 
 mean(Smallpox_States_highest$percentage_sick)
 
 
+#Create a varible name "Smallpox_Mean" to be used for output
+Smallpox_Mean <- mean(Smallpox_States_highest$percentage_sick)
+
 
 #View the top disease per State and show the percentage_sick
-View(States_highest_sick)
+#View(States_highest_sick)
     
+
+#Creating a table that shows all the Highest_Mean per Disease lined up
+Total_Highest_Mean <- cbind(Hep_A_Mean, Measles_Mean, Mumps_Mean, Pertussis_Mean, Polio_Mean, Rubella_Mean, Smallpox_Mean)
+
+
+View(States_highest_sick)
+
+Combined_PDF = "C:/Users/micha/Desktop/DevLeague Begins Nov 7 2017/Project_Sprint_5/Combined_PDF.pdf"
+
+pdf(file = Combined_PDF)
+
+
+#Creating the labels which will be at the bottom of the Highest Mean Score for the bar graphs
+labels <- list('Hepatitis_A', 'Measles', 'Mumps', 'Pertussis', 'Polio', 'Rubella', 'Smallpox')
+
+#Creating the barplot
+
+
+barplot(Total_Highest_Mean,names.arg=labels, beside = TRUE,col = "turquoise", border= "red", main="Highest_Mean_Per_Disease",ylab="Mean",las=2)
 
 
 #aov(dependent~as.factor(independent1) * as.factor(independent2) ,data=filename)
@@ -166,8 +219,31 @@ View(States_highest_sick)
 #The below line did something useful...!!!
 #aov(percentage_sick~as.factor(state)* as.factor(disease),data = Sicker)  
 
-aov(percentage_sick~as.factor(disease)* as.factor(state),data = Sicker)  
+#aov(percentage_sick~as.factor(disease)* as.factor(state),data = Sicker)  
 
-
+ 
 
 #aov(percentage_sick~as.factor(state)* as.factor(disease),data = Sicker)
+
+dev.off()
+
+#This is writing a PDF file called Total_Highest_Mean to my folder and displaying it on my screen
+dev.print(pdf, 'Total_Highest_Mean.pdf')
+#dev.print(pdf, 'For_Print_out_Highest_States.pdf')
+
+
+
+# Plot weight by group and color by group
+library("ggpubr")
+
+ggboxplot(Sicker, x = "disease", y = "percentage_sick",
+          color = "disease", palette = c("#00AFBB", "#E7B800", "#FC4E07", "#00AF00", "#E7B855", "#FC4E44", "#00AF45"),
+          order = c("Hepatitis A", "Measles", "Mumps", "Pertussis", "Polio", "Rubella", "Smallpox"),
+          ylab = "Mean", xlab = "Disease")
+
+
+res.aov <- aov(percentage_sick ~ disease, data = Sicker)
+
+summary(res.aov)
+TukeyHSD(res.aov)
+
