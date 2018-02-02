@@ -196,12 +196,14 @@ Smallpox_Mean <- mean(Smallpox_States_highest$percentage_sick)
 #Creating a table that shows all the Highest_Mean per Disease lined up
 Total_Highest_Mean <- cbind(Hep_A_Mean, Measles_Mean, Mumps_Mean, Pertussis_Mean, Polio_Mean, Rubella_Mean, Smallpox_Mean)
 
+options(scipen = 10)
 
 View(States_highest_sick)
 
 Combined_PDF = "C:/Users/micha/Desktop/DevLeague Begins Nov 7 2017/Project_Sprint_5/Combined_PDF.pdf"
 
 pdf(file = Combined_PDF)
+
 
 
 #Creating the labels which will be at the bottom of the Highest Mean Score for the bar graphs
@@ -236,14 +238,23 @@ dev.print(pdf, 'Total_Highest_Mean.pdf')
 # Plot weight by group and color by group
 library("ggpubr")
 
+
+#performing the boxplot to get an idea of what the entire dataset looks like 
 ggboxplot(Sicker, x = "disease", y = "percentage_sick",
-          color = "disease", palette = c("#00AFBB", "#E7B800", "#FC4E07", "#00AF00", "#E7B855", "#FC4E44", "#00AF45"),
+          color = "disease", palette = c("#00AFBB", "#E7B800", "#FC4E07", "#00AF00", "#E7B855", "#FC4E44", "#00AF47"),
           order = c("Hepatitis A", "Measles", "Mumps", "Pertussis", "Polio", "Rubella", "Smallpox"),
           ylab = "Mean", xlab = "Disease")
 
 
+#Compute the analysis of variance 
 res.aov <- aov(percentage_sick ~ disease, data = Sicker)
 
+#Summary of the analysis
 summary(res.aov)
+
+
+#If the ANOVA test is significant, then compute Tukey HSD (Tukey Honest Significant Differences, 
+#R function: TukeyHSD()) for performing multiple pairwise-comparison between the means of groups.
+#The function TukeyHD() takes the fitted ANOVA as an argument.
 TukeyHSD(res.aov)
 
